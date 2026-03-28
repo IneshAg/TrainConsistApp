@@ -2,7 +2,6 @@ import java.util.*;
 import java.util.regex.*;
 import java.util.stream.Collectors;
 
-// Passenger Bogie (UC7–UC10)
 class Bogie {
     String name;
     int capacity;
@@ -17,10 +16,9 @@ class Bogie {
     }
 }
 
-// Goods Bogie (UC12)
 class GoodsBogie {
-    String type;   // Cylindrical / Open / Box
-    String cargo;  // Petroleum / Coal / Grain
+    String type;
+    String cargo;
 
     public GoodsBogie(String type, String cargo) {
         this.type = type;
@@ -63,19 +61,24 @@ public class TrainConsistApp {
             System.out.println("13. Total Capacity (UC10)");
             System.out.println("14. Validate Regex (UC11)");
             System.out.println("15. Safety Check (UC12)");
-            System.out.println("16. Exit");
+            System.out.println("16. Performance Comparison (UC13)");
+            System.out.println("17. Exit");
 
             int ch = sc.nextInt();
-            sc.nextLine();
+            sc.nextLine(); // consume newline
 
             switch (ch) {
-
                 case 1:
+                    System.out.print("Enter passenger bogie: ");
                     passengerBogies.add(sc.nextLine());
                     break;
 
                 case 2:
-                    passengerBogies.remove(sc.nextLine());
+                    System.out.print("Enter bogie to remove: ");
+                    if (passengerBogies.remove(sc.nextLine()))
+                        System.out.println("Removed");
+                    else
+                        System.out.println("Not found");
                     break;
 
                 case 3:
@@ -83,12 +86,16 @@ public class TrainConsistApp {
                     break;
 
                 case 4:
+                    System.out.print("Enter bogie to check: ");
                     System.out.println(passengerBogies.contains(sc.nextLine()));
                     break;
 
                 case 5:
+                    System.out.print("Enter bogie ID: ");
                     if (!bogieIds.add(sc.nextLine()))
-                        System.out.println("Duplicate!");
+                        System.out.println("Duplicate ID!");
+                    else
+                        System.out.println("ID added.");
                     break;
 
                 case 6:
@@ -97,8 +104,8 @@ public class TrainConsistApp {
 
                 case 7:
                     trainOrder.clear();
-                    trainOrder.addAll(Arrays.asList("Engine","Sleeper","AC","Cargo","Guard"));
-                    trainOrder.add(2,"Pantry");
+                    trainOrder.addAll(Arrays.asList("Engine", "Sleeper", "AC", "Cargo", "Guard"));
+                    trainOrder.add(2, "Pantry");
                     trainOrder.removeFirst();
                     trainOrder.removeLast();
                     System.out.println(trainOrder);
@@ -110,99 +117,90 @@ public class TrainConsistApp {
                     trainFormation.add("Sleeper");
                     trainFormation.add("Cargo");
                     trainFormation.add("Guard");
-                    trainFormation.add("Sleeper");
+                    trainFormation.add("Sleeper"); // duplicate ignored
                     System.out.println(trainFormation);
                     break;
 
                 case 9:
-                    bogieCapacity.put("Sleeper",72);
-                    bogieCapacity.put("AC Chair",60);
-                    bogieCapacity.put("First Class",40);
-                    bogieCapacity.forEach((k,v)->System.out.println(k+"→"+v));
+                    bogieCapacity.put("Sleeper", 72);
+                    bogieCapacity.put("AC Chair", 60);
+                    bogieCapacity.put("First Class", 40);
+                    bogieCapacity.forEach((k, v) -> System.out.println(k + " → " + v));
                     break;
 
                 case 10:
                     List<Bogie> sortList = Arrays.asList(
-                            new Bogie("Sleeper",72),
-                            new Bogie("AC Chair",60),
-                            new Bogie("First Class",40)
+                            new Bogie("Sleeper", 72),
+                            new Bogie("AC Chair", 60),
+                            new Bogie("First Class", 40)
                     );
-                    sortList.sort((a,b)->b.capacity-a.capacity);
+                    sortList.sort((a, b) -> b.capacity - a.capacity);
                     sortList.forEach(System.out::println);
                     break;
 
                 case 11:
                     List<Bogie> filterList = Arrays.asList(
-                            new Bogie("Sleeper",72),
-                            new Bogie("AC Chair",60),
-                            new Bogie("First Class",40)
+                            new Bogie("Sleeper", 72),
+                            new Bogie("AC Chair", 60),
+                            new Bogie("First Class", 40)
                     );
                     filterList.stream()
-                            .filter(b->b.capacity>60)
+                            .filter(b -> b.capacity > 60)
                             .forEach(System.out::println);
                     break;
 
                 case 12:
                     List<Bogie> groupList = Arrays.asList(
-                            new Bogie("Sleeper",72),
-                            new Bogie("Sleeper",72),
-                            new Bogie("AC Chair",60)
+                            new Bogie("Sleeper", 72),
+                            new Bogie("Sleeper", 72),
+                            new Bogie("AC Chair", 60)
                     );
-                    Map<String,List<Bogie>> grouped =
-                            groupList.stream().collect(Collectors.groupingBy(b->b.name));
-                    grouped.forEach((k,v)->System.out.println(k+"→"+v));
+
+                    Map<String, List<Bogie>> grouped = groupList.stream()
+                            .collect(Collectors.groupingBy(b -> b.name));   // ✅ FIXED
+
+                    grouped.forEach((k, v) -> System.out.println(k + " → " + v));
                     break;
 
+                // 🔥 UC13 PERFORMANCE COMPARISON
                 case 13:
-                    List<Bogie> capList = Arrays.asList(
-                            new Bogie("Sleeper",72),
-                            new Bogie("AC Chair",60),
-                            new Bogie("First Class",40)
-                    );
-                    int total = capList.stream()
-                            .map(b->b.capacity)
-                            .reduce(0,Integer::sum);
-                    System.out.println("Total="+total);
+
+                    List<Bogie> bigList = new ArrayList<>();
+
+                    // Large dataset
+                    for (int i = 0; i < 100000; i++) {
+                        bigList.add(new Bogie("Sleeper", 72));
+                        bigList.add(new Bogie("AC Chair", 60));
+                        bigList.add(new Bogie("First Class", 40));
+                    }
+
+                    // LOOP
+                    long startLoop = System.nanoTime();
+
+                    List<Bogie> loopResult = new ArrayList<>();
+                    for (Bogie b : bigList) {
+                        if (b.capacity > 60) {
+                            loopResult.add(b);
+                        }
+                    }
+
+                    long endLoop = System.nanoTime();
+
+                    // STREAM
+                    long startStream = System.nanoTime();
+
+                    List<Bogie> streamResult = bigList.stream()
+                            .filter(b -> b.capacity > 60)
+                            .toList();
+
+                    long endStream = System.nanoTime();
+
+                    System.out.println("\nLoop Result Size: " + loopResult.size());
+                    System.out.println("Stream Result Size: " + streamResult.size());
+
+                    System.out.println("\nExecution Time:");
+                    System.out.println("Loop Time   : " + (endLoop - startLoop) + " ns");
+                    System.out.println("Stream Time : " + (endStream - startStream) + " ns");
+
                     break;
-
-                case 14:
-                    System.out.print("Train ID: ");
-                    String t = sc.nextLine();
-                    System.out.print("Cargo Code: ");
-                    String c = sc.nextLine();
-
-                    boolean validT = Pattern.matches("TRN-\\d{4}", t);
-                    boolean validC = Pattern.matches("PET-[A-Z]{2}", c);
-
-                    System.out.println(validT ? "Valid Train ID" : "Invalid Train ID");
-                    System.out.println(validC ? "Valid Cargo" : "Invalid Cargo");
-                    break;
-
-                case 15:
-                    List<GoodsBogie> goods = Arrays.asList(
-                            new GoodsBogie("Cylindrical","Petroleum"),
-                            new GoodsBogie("Open","Coal"),
-                            new GoodsBogie("Box","Grain")
-                    );
-
-                    boolean safe = goods.stream()
-                            .allMatch(g ->
-                                    !g.type.equals("Cylindrical") ||
-                                            g.cargo.equals("Petroleum")
-                            );
-
-                    System.out.println("Goods Bogies:");
-                    goods.forEach(System.out::println);
-
-                    System.out.println(safe ? "Train is SAFE" : "Train is UNSAFE");
-                    break;
-
-                case 16:
-                    return;
-
-                default:
-                    System.out.println("Invalid");
             }
-        }
-    }
-}
