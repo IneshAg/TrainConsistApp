@@ -15,6 +15,9 @@ public class TrainConsistApp {
         // UC4
         LinkedList<String> trainOrder = new LinkedList<>();
 
+        // UC5
+        LinkedHashSet<String> trainFormation = new LinkedHashSet<>();
+
         System.out.println("=== Train Consist Management App ===");
         System.out.println("Train initialized successfully.");
         System.out.println("Initial bogie count: " + passengerBogies.size());
@@ -28,7 +31,8 @@ public class TrainConsistApp {
             System.out.println("5. Add Bogie ID (Unique)");
             System.out.println("6. View Unique Bogie IDs");
             System.out.println("7. Manage Train Order (UC4)");
-            System.out.println("8. Exit");
+            System.out.println("8. Manage Train Formation (UC5)");
+            System.out.println("9. Exit");
 
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
@@ -85,11 +89,14 @@ public class TrainConsistApp {
                     break;
 
                 case 7:
-                    // UC4 LinkedList operations
                     manageTrainOrder(trainOrder);
                     break;
 
                 case 8:
+                    manageTrainFormation(trainFormation);
+                    break;
+
+                case 9:
                     System.out.println("Exiting application...");
                     sc.close();
                     return;
@@ -100,10 +107,9 @@ public class TrainConsistApp {
         }
     }
 
-    // UC4 Logic
+    // UC4: LinkedList operations
     public static void manageTrainOrder(LinkedList<String> trainOrder) {
 
-        // Initial formation
         trainOrder.clear();
 
         trainOrder.add("Engine");
@@ -114,15 +120,30 @@ public class TrainConsistApp {
 
         System.out.println("\nInitial Train Order: " + trainOrder);
 
-        // Insert Pantry at position 2
         trainOrder.add(2, "Pantry Car");
-        System.out.println("After adding Pantry Car at position 2: " + trainOrder);
+        System.out.println("After adding Pantry Car: " + trainOrder);
 
-        // Remove first and last
         trainOrder.removeFirst();
         trainOrder.removeLast();
 
-        System.out.println("After removing first and last bogie:");
         System.out.println("Final Train Order: " + trainOrder);
+    }
+
+    // UC5: LinkedHashSet operations
+    public static void manageTrainFormation(LinkedHashSet<String> trainFormation) {
+
+        trainFormation.clear();
+
+        // Add bogies
+        trainFormation.add("Engine");
+        trainFormation.add("Sleeper");
+        trainFormation.add("Cargo");
+        trainFormation.add("Guard");
+
+        // Attempt duplicate
+        trainFormation.add("Sleeper");
+
+        System.out.println("\nTrain Formation (Ordered & Unique):");
+        System.out.println(trainFormation);
     }
 }
