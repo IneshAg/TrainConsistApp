@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class TrainConsistApp {
 
@@ -12,18 +10,20 @@ public class TrainConsistApp {
         System.out.println("=== Train Consist Management App ===");
 
         List<String> passengerBogies = new ArrayList<>();
+        Set<String> bogieIds = new HashSet<>();
 
         System.out.println("Train initialized successfully.");
         System.out.println("Initial bogie count: " + passengerBogies.size());
 
-        // UC2: Operations Menu
         while (true) {
             System.out.println("\n===== MENU =====");
             System.out.println("1. Add Passenger Bogie");
             System.out.println("2. Remove Passenger Bogie");
             System.out.println("3. View Bogies");
             System.out.println("4. Check Bogie Exists");
-            System.out.println("5. Exit");
+            System.out.println("5. Add Bogie ID (Unique)");
+            System.out.println("6. View All Bogie IDs");
+            System.out.println("7. Exit");
 
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
@@ -32,7 +32,7 @@ public class TrainConsistApp {
             switch (choice) {
 
                 case 1:
-                    // Add bogies
+                    // Add passenger bogie
                     System.out.println("Enter bogie type (Sleeper / AC Chair / First Class): ");
                     String bogie = sc.nextLine();
 
@@ -70,6 +70,23 @@ public class TrainConsistApp {
                     break;
 
                 case 5:
+                    // UC3: Add Bogie ID (Unique)
+                    System.out.println("Enter Bogie ID (e.g., BG101): ");
+                    String id = sc.nextLine();
+
+                    if (bogieIds.add(id)) {
+                        System.out.println("Bogie ID added successfully.");
+                    } else {
+                        System.out.println("Duplicate ID! Not added.");
+                    }
+                    break;
+
+                case 6:
+                    // Display unique IDs
+                    System.out.println("Unique Bogie IDs: " + bogieIds);
+                    break;
+
+                case 7:
                     System.out.println("Exiting application...");
                     sc.close();
                     return;
