@@ -18,6 +18,9 @@ public class TrainConsistApp {
         // UC5
         LinkedHashSet<String> trainFormation = new LinkedHashSet<>();
 
+        // UC6
+        HashMap<String, Integer> bogieCapacity = new HashMap<>();
+
         System.out.println("=== Train Consist Management App ===");
         System.out.println("Train initialized successfully.");
         System.out.println("Initial bogie count: " + passengerBogies.size());
@@ -32,7 +35,8 @@ public class TrainConsistApp {
             System.out.println("6. View Unique Bogie IDs");
             System.out.println("7. Manage Train Order (UC4)");
             System.out.println("8. Manage Train Formation (UC5)");
-            System.out.println("9. Exit");
+            System.out.println("9. Manage Bogie Capacity (UC6)");
+            System.out.println("10. Exit");
 
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
@@ -97,6 +101,10 @@ public class TrainConsistApp {
                     break;
 
                 case 9:
+                    manageBogieCapacity(bogieCapacity, sc);
+                    break;
+
+                case 10:
                     System.out.println("Exiting application...");
                     sc.close();
                     return;
@@ -107,7 +115,7 @@ public class TrainConsistApp {
         }
     }
 
-    // UC4: LinkedList operations
+    // UC4
     public static void manageTrainOrder(LinkedList<String> trainOrder) {
 
         trainOrder.clear();
@@ -129,21 +137,37 @@ public class TrainConsistApp {
         System.out.println("Final Train Order: " + trainOrder);
     }
 
-    // UC5: LinkedHashSet operations
+    // UC5
     public static void manageTrainFormation(LinkedHashSet<String> trainFormation) {
 
         trainFormation.clear();
 
-        // Add bogies
         trainFormation.add("Engine");
         trainFormation.add("Sleeper");
         trainFormation.add("Cargo");
         trainFormation.add("Guard");
 
-        // Attempt duplicate
-        trainFormation.add("Sleeper");
+        trainFormation.add("Sleeper"); // duplicate
 
         System.out.println("\nTrain Formation (Ordered & Unique):");
         System.out.println(trainFormation);
+    }
+
+    // UC6
+    public static void manageBogieCapacity(HashMap<String, Integer> bogieCapacity, Scanner sc) {
+
+        bogieCapacity.clear();
+
+        // Insert values
+        bogieCapacity.put("Sleeper", 72);
+        bogieCapacity.put("AC Chair", 60);
+        bogieCapacity.put("First Class", 40);
+
+        System.out.println("\nBogie Capacity Mapping:");
+
+        // Iterate using entrySet
+        for (Map.Entry<String, Integer> entry : bogieCapacity.entrySet()) {
+            System.out.println(entry.getKey() + " → Capacity: " + entry.getValue());
+        }
     }
 }
