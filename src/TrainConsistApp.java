@@ -2,48 +2,74 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-// Main class
 public class TrainConsistApp {
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        // Welcome message
+        // UC1: Initialization
         System.out.println("=== Train Consist Management App ===");
 
-        // Initialize empty consist (dynamic list)
-        List<String> trainConsist = new ArrayList<>();
+        List<String> passengerBogies = new ArrayList<>();
 
-        // Display initial count
         System.out.println("Train initialized successfully.");
-        System.out.println("Initial bogie count: " + trainConsist.size());
+        System.out.println("Initial bogie count: " + passengerBogies.size());
 
-        // Simple interaction loop (basic UC1 extension)
+        // UC2: Operations Menu
         while (true) {
-            System.out.println("\nChoose an option:");
-            System.out.println("1. Add Bogie");
-            System.out.println("2. View Bogie Count");
-            System.out.println("3. Exit");
+            System.out.println("\n===== MENU =====");
+            System.out.println("1. Add Passenger Bogie");
+            System.out.println("2. Remove Passenger Bogie");
+            System.out.println("3. View Bogies");
+            System.out.println("4. Check Bogie Exists");
+            System.out.println("5. Exit");
 
+            System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
             sc.nextLine(); // clear buffer
 
             switch (choice) {
 
                 case 1:
-                    System.out.println("Enter bogie type (Sleeper / AC Chair / First Class / Goods):");
+                    // Add bogies
+                    System.out.println("Enter bogie type (Sleeper / AC Chair / First Class): ");
                     String bogie = sc.nextLine();
 
-                    trainConsist.add(bogie);
+                    passengerBogies.add(bogie);
                     System.out.println("Bogie added successfully.");
                     break;
 
                 case 2:
-                    System.out.println("Current bogie count: " + trainConsist.size());
+                    // Remove bogie
+                    System.out.println("Enter bogie type to remove: ");
+                    String removeBogie = sc.nextLine();
+
+                    if (passengerBogies.remove(removeBogie)) {
+                        System.out.println("Bogie removed successfully.");
+                    } else {
+                        System.out.println("Bogie not found.");
+                    }
                     break;
 
                 case 3:
+                    // Display bogies
+                    System.out.println("Passenger Bogies: " + passengerBogies);
+                    break;
+
+                case 4:
+                    // Check existence
+                    System.out.println("Enter bogie type to check: ");
+                    String checkBogie = sc.nextLine();
+
+                    if (passengerBogies.contains(checkBogie)) {
+                        System.out.println(checkBogie + " exists in the train.");
+                    } else {
+                        System.out.println(checkBogie + " does NOT exist.");
+                    }
+                    break;
+
+                case 5:
                     System.out.println("Exiting application...");
                     sc.close();
                     return;
