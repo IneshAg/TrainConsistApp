@@ -1,7 +1,7 @@
 import java.util.*;
 import java.util.stream.Collectors;
 
-// Bogie Class (UC7, UC8, UC9)
+// Bogie Class (UC7–UC10)
 class Bogie {
     String name;
     int capacity;
@@ -56,7 +56,8 @@ public class TrainConsistApp {
             System.out.println("10. Sort Bogies by Capacity (UC7)");
             System.out.println("11. Filter Bogies (UC8)");
             System.out.println("12. Group Bogies by Type (UC9)");
-            System.out.println("13. Exit");
+            System.out.println("13. Total Seating Capacity (UC10)");
+            System.out.println("14. Exit");
 
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
@@ -65,21 +66,19 @@ public class TrainConsistApp {
             switch (choice) {
 
                 case 1:
-                    System.out.println("Enter bogie type (Sleeper / AC Chair / First Class): ");
+                    System.out.println("Enter bogie type: ");
                     String bogie = sc.nextLine();
                     passengerBogies.add(bogie);
-                    System.out.println("Bogie added successfully.");
+                    System.out.println("Bogie added.");
                     break;
 
                 case 2:
-                    System.out.println("Enter bogie type to remove: ");
-                    String removeBogie = sc.nextLine();
-
-                    if (passengerBogies.remove(removeBogie)) {
-                        System.out.println("Bogie removed successfully.");
-                    } else {
-                        System.out.println("Bogie not found.");
-                    }
+                    System.out.println("Enter bogie to remove: ");
+                    String remove = sc.nextLine();
+                    if (passengerBogies.remove(remove))
+                        System.out.println("Removed.");
+                    else
+                        System.out.println("Not found.");
                     break;
 
                 case 3:
@@ -87,29 +86,22 @@ public class TrainConsistApp {
                     break;
 
                 case 4:
-                    System.out.println("Enter bogie type to check: ");
-                    String checkBogie = sc.nextLine();
-
-                    if (passengerBogies.contains(checkBogie)) {
-                        System.out.println(checkBogie + " exists.");
-                    } else {
-                        System.out.println(checkBogie + " does NOT exist.");
-                    }
+                    System.out.println("Enter bogie to check: ");
+                    String check = sc.nextLine();
+                    System.out.println(passengerBogies.contains(check) ? "Exists" : "Not found");
                     break;
 
                 case 5:
-                    System.out.println("Enter Bogie ID (e.g., BG101): ");
+                    System.out.println("Enter Bogie ID: ");
                     String id = sc.nextLine();
-
-                    if (bogieIds.add(id)) {
-                        System.out.println("Bogie ID added successfully.");
-                    } else {
-                        System.out.println("Duplicate ID! Not added.");
-                    }
+                    if (bogieIds.add(id))
+                        System.out.println("Added.");
+                    else
+                        System.out.println("Duplicate ID!");
                     break;
 
                 case 6:
-                    System.out.println("Unique Bogie IDs: " + bogieIds);
+                    System.out.println("Unique IDs: " + bogieIds);
                     break;
 
                 case 7:
@@ -125,20 +117,23 @@ public class TrainConsistApp {
                     break;
 
                 case 10:
-                    sortBogiesByCapacity();
+                    sortBogies();
                     break;
 
                 case 11:
-                    filterBogiesUsingStreams();
+                    filterBogies();
                     break;
 
                 case 12:
-                    groupBogiesByType();
+                    groupBogies();
                     break;
 
                 case 13:
-                    System.out.println("Exiting application...");
-                    sc.close();
+                    totalCapacity();
+                    break;
+
+                case 14:
+                    System.out.println("Exiting...");
                     return;
 
                 default:
@@ -148,115 +143,102 @@ public class TrainConsistApp {
     }
 
     // UC4
-    public static void manageTrainOrder(LinkedList<String> trainOrder) {
+    static void manageTrainOrder(LinkedList<String> list) {
+        list.clear();
+        list.add("Engine");
+        list.add("Sleeper");
+        list.add("AC");
+        list.add("Cargo");
+        list.add("Guard");
 
-        trainOrder.clear();
+        System.out.println("Initial: " + list);
 
-        trainOrder.add("Engine");
-        trainOrder.add("Sleeper");
-        trainOrder.add("AC");
-        trainOrder.add("Cargo");
-        trainOrder.add("Guard");
+        list.add(2, "Pantry");
+        list.removeFirst();
+        list.removeLast();
 
-        System.out.println("\nInitial Train Order: " + trainOrder);
-
-        trainOrder.add(2, "Pantry Car");
-        System.out.println("After adding Pantry Car: " + trainOrder);
-
-        trainOrder.removeFirst();
-        trainOrder.removeLast();
-
-        System.out.println("Final Train Order: " + trainOrder);
+        System.out.println("Final: " + list);
     }
 
     // UC5
-    public static void manageTrainFormation(LinkedHashSet<String> trainFormation) {
+    static void manageTrainFormation(LinkedHashSet<String> set) {
+        set.clear();
+        set.add("Engine");
+        set.add("Sleeper");
+        set.add("Cargo");
+        set.add("Guard");
+        set.add("Sleeper"); // duplicate
 
-        trainFormation.clear();
-
-        trainFormation.add("Engine");
-        trainFormation.add("Sleeper");
-        trainFormation.add("Cargo");
-        trainFormation.add("Guard");
-
-        trainFormation.add("Sleeper"); // duplicate ignored
-
-        System.out.println("\nTrain Formation (Ordered & Unique):");
-        System.out.println(trainFormation);
+        System.out.println("Formation: " + set);
     }
 
     // UC6
-    public static void manageBogieCapacity(HashMap<String, Integer> bogieCapacity) {
+    static void manageBogieCapacity(HashMap<String, Integer> map) {
+        map.clear();
+        map.put("Sleeper", 72);
+        map.put("AC Chair", 60);
+        map.put("First Class", 40);
 
-        bogieCapacity.clear();
-
-        bogieCapacity.put("Sleeper", 72);
-        bogieCapacity.put("AC Chair", 60);
-        bogieCapacity.put("First Class", 40);
-
-        System.out.println("\nBogie Capacity Mapping:");
-
-        for (Map.Entry<String, Integer> entry : bogieCapacity.entrySet()) {
-            System.out.println(entry.getKey() + " → Capacity: " + entry.getValue());
-        }
+        map.forEach((k, v) -> System.out.println(k + " → " + v));
     }
 
     // UC7
-    public static void sortBogiesByCapacity() {
+    static void sortBogies() {
+        List<Bogie> list = Arrays.asList(
+                new Bogie("Sleeper", 72),
+                new Bogie("AC Chair", 60),
+                new Bogie("First Class", 40)
+        );
 
-        List<Bogie> bogies = new ArrayList<>();
+        list.sort((a, b) -> b.capacity - a.capacity);
 
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 60));
-        bogies.add(new Bogie("First Class", 40));
-
-        bogies.sort((b1, b2) -> b2.capacity - b1.capacity);
-
-        System.out.println("\nBogies Sorted by Capacity (High → Low):");
-
-        for (Bogie b : bogies) {
-            System.out.println(b);
-        }
+        System.out.println("Sorted:");
+        list.forEach(System.out::println);
     }
 
     // UC8
-    public static void filterBogiesUsingStreams() {
+    static void filterBogies() {
+        List<Bogie> list = Arrays.asList(
+                new Bogie("Sleeper", 72),
+                new Bogie("AC Chair", 60),
+                new Bogie("First Class", 40)
+        );
 
-        List<Bogie> bogies = new ArrayList<>();
-
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 60));
-        bogies.add(new Bogie("First Class", 40));
-
-        System.out.println("\nOriginal Bogies:");
-        bogies.forEach(System.out::println);
-
-        List<Bogie> filtered = bogies.stream()
+        List<Bogie> filtered = list.stream()
                 .filter(b -> b.capacity > 60)
                 .toList();
 
-        System.out.println("\nFiltered Bogies (Capacity > 60):");
+        System.out.println("Filtered:");
         filtered.forEach(System.out::println);
     }
 
     // UC9
-    public static void groupBogiesByType() {
+    static void groupBogies() {
+        List<Bogie> list = Arrays.asList(
+                new Bogie("Sleeper", 72),
+                new Bogie("Sleeper", 72),
+                new Bogie("AC Chair", 60),
+                new Bogie("First Class", 40)
+        );
 
-        List<Bogie> bogies = new ArrayList<>();
+        Map<String, List<Bogie>> grouped =
+                list.stream().collect(Collectors.groupingBy(b -> b.name));
 
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 60));
-        bogies.add(new Bogie("First Class", 40));
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 60));
+        grouped.forEach((k, v) -> System.out.println(k + " → " + v));
+    }
 
-        Map<String, List<Bogie>> grouped = bogies.stream()
-                .collect(Collectors.groupingBy(b -> b.name));
+    // UC10 🔥
+    static void totalCapacity() {
+        List<Bogie> list = Arrays.asList(
+                new Bogie("Sleeper", 72),
+                new Bogie("AC Chair", 60),
+                new Bogie("First Class", 40)
+        );
 
-        System.out.println("\nGrouped Bogies by Type:");
+        int total = list.stream()
+                .map(b -> b.capacity)
+                .reduce(0, Integer::sum);
 
-        for (Map.Entry<String, List<Bogie>> entry : grouped.entrySet()) {
-            System.out.println("\n" + entry.getKey() + " → " + entry.getValue());
-        }
+        System.out.println("Total Seating Capacity: " + total);
     }
 }
