@@ -1,6 +1,7 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
-// UC7 & UC8: Bogie Class
+// Bogie Class (UC7, UC8, UC9)
 class Bogie {
     String name;
     int capacity;
@@ -53,8 +54,9 @@ public class TrainConsistApp {
             System.out.println("8. Manage Train Formation (UC5)");
             System.out.println("9. Manage Bogie Capacity (UC6)");
             System.out.println("10. Sort Bogies by Capacity (UC7)");
-            System.out.println("11. Filter Bogies (UC8 - Streams)");
-            System.out.println("12. Exit");
+            System.out.println("11. Filter Bogies (UC8)");
+            System.out.println("12. Group Bogies by Type (UC9)");
+            System.out.println("13. Exit");
 
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
@@ -131,6 +133,10 @@ public class TrainConsistApp {
                     break;
 
                 case 12:
+                    groupBogiesByType();
+                    break;
+
+                case 13:
                     System.out.println("Exiting application...");
                     sc.close();
                     return;
@@ -231,5 +237,26 @@ public class TrainConsistApp {
 
         System.out.println("\nFiltered Bogies (Capacity > 60):");
         filtered.forEach(System.out::println);
+    }
+
+    // UC9
+    public static void groupBogiesByType() {
+
+        List<Bogie> bogies = new ArrayList<>();
+
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 60));
+        bogies.add(new Bogie("First Class", 40));
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 60));
+
+        Map<String, List<Bogie>> grouped = bogies.stream()
+                .collect(Collectors.groupingBy(b -> b.name));
+
+        System.out.println("\nGrouped Bogies by Type:");
+
+        for (Map.Entry<String, List<Bogie>> entry : grouped.entrySet()) {
+            System.out.println("\n" + entry.getKey() + " → " + entry.getValue());
+        }
     }
 }
