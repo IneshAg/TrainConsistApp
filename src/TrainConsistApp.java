@@ -1,5 +1,21 @@
 import java.util.*;
 
+// UC7 & UC8: Bogie Class
+class Bogie {
+    String name;
+    int capacity;
+
+    public Bogie(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (Capacity: " + capacity + ")";
+    }
+}
+
 public class TrainConsistApp {
 
     public static void main(String[] args) {
@@ -36,7 +52,9 @@ public class TrainConsistApp {
             System.out.println("7. Manage Train Order (UC4)");
             System.out.println("8. Manage Train Formation (UC5)");
             System.out.println("9. Manage Bogie Capacity (UC6)");
-            System.out.println("10. Exit");
+            System.out.println("10. Sort Bogies by Capacity (UC7)");
+            System.out.println("11. Filter Bogies (UC8 - Streams)");
+            System.out.println("12. Exit");
 
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
@@ -101,10 +119,18 @@ public class TrainConsistApp {
                     break;
 
                 case 9:
-                    manageBogieCapacity(bogieCapacity, sc);
+                    manageBogieCapacity(bogieCapacity);
                     break;
 
                 case 10:
+                    sortBogiesByCapacity();
+                    break;
+
+                case 11:
+                    filterBogiesUsingStreams();
+                    break;
+
+                case 12:
                     System.out.println("Exiting application...");
                     sc.close();
                     return;
@@ -147,27 +173,63 @@ public class TrainConsistApp {
         trainFormation.add("Cargo");
         trainFormation.add("Guard");
 
-        trainFormation.add("Sleeper"); // duplicate
+        trainFormation.add("Sleeper"); // duplicate ignored
 
         System.out.println("\nTrain Formation (Ordered & Unique):");
         System.out.println(trainFormation);
     }
 
     // UC6
-    public static void manageBogieCapacity(HashMap<String, Integer> bogieCapacity, Scanner sc) {
+    public static void manageBogieCapacity(HashMap<String, Integer> bogieCapacity) {
 
         bogieCapacity.clear();
 
-        // Insert values
         bogieCapacity.put("Sleeper", 72);
         bogieCapacity.put("AC Chair", 60);
         bogieCapacity.put("First Class", 40);
 
         System.out.println("\nBogie Capacity Mapping:");
 
-        // Iterate using entrySet
         for (Map.Entry<String, Integer> entry : bogieCapacity.entrySet()) {
             System.out.println(entry.getKey() + " → Capacity: " + entry.getValue());
         }
+    }
+
+    // UC7
+    public static void sortBogiesByCapacity() {
+
+        List<Bogie> bogies = new ArrayList<>();
+
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 60));
+        bogies.add(new Bogie("First Class", 40));
+
+        bogies.sort((b1, b2) -> b2.capacity - b1.capacity);
+
+        System.out.println("\nBogies Sorted by Capacity (High → Low):");
+
+        for (Bogie b : bogies) {
+            System.out.println(b);
+        }
+    }
+
+    // UC8
+    public static void filterBogiesUsingStreams() {
+
+        List<Bogie> bogies = new ArrayList<>();
+
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 60));
+        bogies.add(new Bogie("First Class", 40));
+
+        System.out.println("\nOriginal Bogies:");
+        bogies.forEach(System.out::println);
+
+        List<Bogie> filtered = bogies.stream()
+                .filter(b -> b.capacity > 60)
+                .toList();
+
+        System.out.println("\nFiltered Bogies (Capacity > 60):");
+        filtered.forEach(System.out::println);
     }
 }
