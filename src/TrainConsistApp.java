@@ -14,6 +14,13 @@ class CargoSafetyException extends RuntimeException {
     }
 }
 
+// ✅ UC20: Custom Exception
+class EmptyTrainException extends Exception {
+    public EmptyTrainException(String message) {
+        super(message);
+    }
+}
+
 class Bogie {
     String name;
     int capacity;
@@ -68,20 +75,6 @@ class GoodsBogie {
 
 public class TrainConsistApp {
 
-    // UC16
-    public static void bubbleSortBogies(List<Bogie> list) {
-        int n = list.size();
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = 0; j < n - i - 1; j++) {
-                if (list.get(j).capacity > list.get(j + 1).capacity) {
-                    Bogie temp = list.get(j);
-                    list.set(j, list.get(j + 1));
-                    list.set(j + 1, temp);
-                }
-            }
-        }
-    }
-
     // UC18
     public static int linearSearch(String[] arr, String key) {
         for (int i = 0; i < arr.length; i++) {
@@ -92,7 +85,7 @@ public class TrainConsistApp {
         return -1;
     }
 
-    // ✅ UC19 Binary Search
+    // UC19
     public static int binarySearch(String[] arr, String key) {
         int left = 0, right = arr.length - 1;
 
@@ -114,27 +107,18 @@ public class TrainConsistApp {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
-
-        List<String> passengerBogies = new ArrayList<>();
         Set<String> bogieIds = new HashSet<>();
 
         System.out.println("=== Train Consist Management App ===");
 
         while (true) {
             System.out.println("\n===== MENU =====");
-            System.out.println("1. Add Passenger Bogie");
-            System.out.println("2. Remove Passenger Bogie");
-            System.out.println("3. View Passenger Bogies");
-            System.out.println("4. Check Bogie Exists");
             System.out.println("5. Add Bogie ID");
             System.out.println("6. View Bogie IDs");
-            System.out.println("17. Exit");
-            System.out.println("18. Add Validated Bogie (UC14)");
-            System.out.println("19. Assign Cargo (UC15)");
-            System.out.println("20. Bubble Sort (UC16)");
-            System.out.println("21. Arrays.sort (UC17)");
             System.out.println("22. Linear Search (UC18)");
             System.out.println("23. Binary Search (UC19)");
+            System.out.println("24. Safe Search (UC20)");
+            System.out.println("17. Exit");
 
             int ch = sc.nextInt();
             sc.nextLine();
@@ -152,48 +136,50 @@ public class TrainConsistApp {
 
                 // UC18
                 case 22:
-                    if (bogieIds.isEmpty()) {
-                        System.out.println("No bogie IDs available!");
-                        break;
-                    }
-
-                    String[] idArray1 = bogieIds.toArray(new String[0]);
-
-                    System.out.print("Enter Bogie ID to search: ");
+                    String[] arr1 = bogieIds.toArray(new String[0]);
+                    System.out.print("Enter ID: ");
                     String key1 = sc.nextLine();
 
-                    int index1 = linearSearch(idArray1, key1);
-
-                    if (index1 != -1)
-                        System.out.println("Found at position: " + index1);
-                    else
-                        System.out.println("Not Found");
+                    int res1 = linearSearch(arr1, key1);
+                    System.out.println(res1 != -1 ? "Found" : "Not Found");
                     break;
 
-                // ✅ UC19
+                // UC19
                 case 23:
-                    if (bogieIds.isEmpty()) {
-                        System.out.println("No bogie IDs available!");
-                        break;
-                    }
+                    String[] arr2 = bogieIds.toArray(new String[0]);
+                    Arrays.sort(arr2);
 
-                    String[] idArray2 = bogieIds.toArray(new String[0]);
-
-                    // Step 1: Sort
-                    Arrays.sort(idArray2);
-
-                    System.out.println("Sorted IDs: " + Arrays.toString(idArray2));
-
-                    // Step 2: Search
-                    System.out.print("Enter Bogie ID to search: ");
+                    System.out.print("Enter ID: ");
                     String key2 = sc.nextLine();
 
-                    int index2 = binarySearch(idArray2, key2);
+                    int res2 = binarySearch(arr2, key2);
+                    System.out.println(res2 != -1 ? "Found" : "Not Found");
+                    break;
 
-                    if (index2 != -1)
-                        System.out.println("✅ Found at index: " + index2);
-                    else
-                        System.out.println("❌ Not Found");
+                // ✅ UC20 IMPLEMENTATION
+                case 24:
+                    try {
+                        // Fail-fast validation
+                        if (bogieIds.isEmpty()) {
+                            throw new EmptyTrainException(
+                                    "🚫 Cannot perform search: No bogies in train!");
+                        }
+
+                        String[] arr = bogieIds.toArray(new String[0]);
+
+                        System.out.print("Enter ID to search: ");
+                        String key = sc.nextLine();
+
+                        int result = linearSearch(arr, key);
+
+                        if (result != -1)
+                            System.out.println("✅ Found at index: " + result);
+                        else
+                            System.out.println("❌ Not Found");
+
+                    } catch (EmptyTrainException e) {
+                        System.out.println("ERROR: " + e.getMessage());
+                    }
                     break;
 
                 case 17:
