@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.regex.*;
 import java.util.stream.Collectors;
 
 // ✅ UC14: Custom Checked Exception
@@ -9,7 +8,7 @@ class InvalidCapacityException extends Exception {
     }
 }
 
-// ✅ UC15: Custom Runtime Exception
+// ✅ UC15: Runtime Exception
 class CargoSafetyException extends RuntimeException {
     public CargoSafetyException(String message) {
         super(message);
@@ -34,9 +33,9 @@ class Bogie {
     }
 }
 
-// Goods Bogie with UC15
+// Goods Bogie (UC15)
 class GoodsBogie {
-    String type;   // Rectangular / Cylindrical
+    String type;
     String cargo;
 
     public GoodsBogie(String type) {
@@ -44,19 +43,15 @@ class GoodsBogie {
         this.cargo = "Empty";
     }
 
-    // ✅ UC15: Safe cargo assignment
     public void assignCargo(String cargoType) {
         try {
-            // Validation
             if (type.equalsIgnoreCase("Rectangular") &&
                     cargoType.equalsIgnoreCase("Petroleum")) {
 
                 throw new CargoSafetyException(
-                        "❌ Unsafe: Petroleum cannot be assigned to Rectangular bogie"
-                );
+                        "❌ Unsafe: Petroleum cannot be assigned to Rectangular bogie");
             }
 
-            // Safe assignment
             this.cargo = cargoType;
             System.out.println("✅ Cargo assigned successfully!");
 
@@ -74,6 +69,23 @@ class GoodsBogie {
 }
 
 public class TrainConsistApp {
+
+    // ✅ UC16: Bubble Sort Method
+    public static void bubbleSortBogies(List<Bogie> list) {
+        int n = list.size();
+
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+
+                if (list.get(j).capacity > list.get(j + 1).capacity) {
+                    // Swap
+                    Bogie temp = list.get(j);
+                    list.set(j, list.get(j + 1));
+                    list.set(j + 1, temp);
+                }
+            }
+        }
+    }
 
     public static void main(String[] args) {
 
@@ -95,19 +107,17 @@ public class TrainConsistApp {
             System.out.println("4. Check Bogie Exists");
             System.out.println("5. Add Bogie ID");
             System.out.println("6. View Bogie IDs");
-            System.out.println("7. Train Order (UC4)");
-            System.out.println("8. Train Formation (UC5)");
-            System.out.println("9. Capacity Map (UC6)");
-            System.out.println("10. Sort (UC7)");
-            System.out.println("11. Filter (UC8)");
-            System.out.println("12. Group (UC9)");
-            System.out.println("13. Performance Comparison (UC13)");
-            System.out.println("14. Validate Regex (UC11)");
-            System.out.println("15. Safety Check (UC12)");
-            System.out.println("16. (Reserved)");
+            System.out.println("7. Train Order");
+            System.out.println("8. Train Formation");
+            System.out.println("9. Capacity Map");
+            System.out.println("10. Sort (Comparator)");
+            System.out.println("11. Filter");
+            System.out.println("12. Group");
+            System.out.println("13. Performance Comparison");
             System.out.println("17. Exit");
             System.out.println("18. Add Validated Bogie (UC14)");
-            System.out.println("19. Assign Cargo to Goods Bogie (UC15)");
+            System.out.println("19. Assign Cargo (UC15)");
+            System.out.println("20. Sort Passenger Bogies (Bubble Sort - UC16)");
 
             int ch = sc.nextInt();
             sc.nextLine();
@@ -121,10 +131,7 @@ public class TrainConsistApp {
 
                 case 2:
                     System.out.print("Enter bogie to remove: ");
-                    if (passengerBogies.remove(sc.nextLine()))
-                        System.out.println("Removed");
-                    else
-                        System.out.println("Not found");
+                    passengerBogies.remove(sc.nextLine());
                     break;
 
                 case 3:
@@ -138,10 +145,7 @@ public class TrainConsistApp {
 
                 case 5:
                     System.out.print("Enter bogie ID: ");
-                    if (!bogieIds.add(sc.nextLine()))
-                        System.out.println("Duplicate ID!");
-                    else
-                        System.out.println("ID added.");
+                    bogieIds.add(sc.nextLine());
                     break;
 
                 case 6:
@@ -151,9 +155,6 @@ public class TrainConsistApp {
                 case 7:
                     trainOrder.clear();
                     trainOrder.addAll(Arrays.asList("Engine", "Sleeper", "AC", "Cargo", "Guard"));
-                    trainOrder.add(2, "Pantry");
-                    trainOrder.removeFirst();
-                    trainOrder.removeLast();
                     System.out.println(trainOrder);
                     break;
 
@@ -162,8 +163,6 @@ public class TrainConsistApp {
                     trainFormation.add("Engine");
                     trainFormation.add("Sleeper");
                     trainFormation.add("Cargo");
-                    trainFormation.add("Guard");
-                    trainFormation.add("Sleeper");
                     System.out.println(trainFormation);
                     break;
 
@@ -174,87 +173,6 @@ public class TrainConsistApp {
                     bogieCapacity.forEach((k, v) -> System.out.println(k + " → " + v));
                     break;
 
-                case 10:
-                    try {
-                        List<Bogie> sortList = Arrays.asList(
-                                new Bogie("Sleeper", 72),
-                                new Bogie("AC Chair", 60),
-                                new Bogie("First Class", 40)
-                        );
-                        sortList.sort((a, b) -> b.capacity - a.capacity);
-                        sortList.forEach(System.out::println);
-                    } catch (InvalidCapacityException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-
-                case 11:
-                    try {
-                        List<Bogie> filterList = Arrays.asList(
-                                new Bogie("Sleeper", 72),
-                                new Bogie("AC Chair", 60),
-                                new Bogie("First Class", 40)
-                        );
-                        filterList.stream()
-                                .filter(b -> b.capacity > 60)
-                                .forEach(System.out::println);
-                    } catch (InvalidCapacityException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-
-                case 12:
-                    try {
-                        List<Bogie> groupList = Arrays.asList(
-                                new Bogie("Sleeper", 72),
-                                new Bogie("Sleeper", 72),
-                                new Bogie("AC Chair", 60)
-                        );
-
-                        Map<String, List<Bogie>> grouped = groupList.stream()
-                                .collect(Collectors.groupingBy(b -> b.name));
-
-                        grouped.forEach((k, v) -> System.out.println(k + " → " + v));
-                    } catch (InvalidCapacityException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-
-                case 13:
-                    try {
-                        List<Bogie> bigList = new ArrayList<>();
-
-                        for (int i = 0; i < 100000; i++) {
-                            bigList.add(new Bogie("Sleeper", 72));
-                            bigList.add(new Bogie("AC Chair", 60));
-                            bigList.add(new Bogie("First Class", 40));
-                        }
-
-                        long startLoop = System.nanoTime();
-                        List<Bogie> loopResult = new ArrayList<>();
-
-                        for (Bogie b : bigList) {
-                            if (b.capacity > 60) {
-                                loopResult.add(b);
-                            }
-                        }
-                        long endLoop = System.nanoTime();
-
-                        long startStream = System.nanoTime();
-                        List<Bogie> streamResult = bigList.stream()
-                                .filter(b -> b.capacity > 60)
-                                .toList();
-                        long endStream = System.nanoTime();
-
-                        System.out.println("Loop Time: " + (endLoop - startLoop));
-                        System.out.println("Stream Time: " + (endStream - startStream));
-
-                    } catch (InvalidCapacityException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-
-                // ✅ UC14
                 case 18:
                     try {
                         System.out.print("Enter Bogie Name: ");
@@ -268,23 +186,43 @@ public class TrainConsistApp {
                         System.out.println("Bogie Created: " + b);
 
                     } catch (InvalidCapacityException e) {
-                        System.out.println("Error: " + e.getMessage());
+                        System.out.println(e.getMessage());
                     }
                     break;
 
-                // ✅ UC15
                 case 19:
-                    System.out.print("Enter Bogie Type (Rectangular/Cylindrical): ");
+                    System.out.print("Enter Bogie Type: ");
                     String type = sc.nextLine();
 
                     GoodsBogie gb = new GoodsBogie(type);
 
-                    System.out.print("Enter Cargo (Petroleum/Coal/Food): ");
+                    System.out.print("Enter Cargo: ");
                     String cargo = sc.nextLine();
 
                     gb.assignCargo(cargo);
-
                     System.out.println(gb);
+                    break;
+
+                // ✅ UC16 IMPLEMENTATION
+                case 20:
+                    try {
+                        List<Bogie> list = new ArrayList<>();
+
+                        list.add(new Bogie("Sleeper", 72));
+                        list.add(new Bogie("AC Chair", 60));
+                        list.add(new Bogie("First Class", 40));
+
+                        System.out.println("Before Sorting:");
+                        list.forEach(System.out::println);
+
+                        bubbleSortBogies(list);
+
+                        System.out.println("\nAfter Bubble Sort (Ascending Capacity):");
+                        list.forEach(System.out::println);
+
+                    } catch (InvalidCapacityException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
 
                 case 17:
