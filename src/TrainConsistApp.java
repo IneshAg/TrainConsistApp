@@ -1,21 +1,19 @@
 import java.util.*;
-import java.util.stream.Collectors;
 
-// ✅ UC14: Checked Exception
+// ✅ UC14
 class InvalidCapacityException extends Exception {
     public InvalidCapacityException(String message) {
         super(message);
     }
 }
 
-// ✅ UC15: Runtime Exception
+// ✅ UC15
 class CargoSafetyException extends RuntimeException {
     public CargoSafetyException(String message) {
         super(message);
     }
 }
 
-// Passenger Bogie
 class Bogie {
     String name;
     int capacity;
@@ -33,7 +31,7 @@ class Bogie {
     }
 }
 
-// Goods Bogie (UC15)
+// ✅ UC15
 class GoodsBogie {
     String type;
     String cargo;
@@ -70,7 +68,7 @@ class GoodsBogie {
 
 public class TrainConsistApp {
 
-    // ✅ UC16: Bubble Sort
+    // ✅ UC16 Bubble Sort
     public static void bubbleSortBogies(List<Bogie> list) {
         int n = list.size();
         for (int i = 0; i < n - 1; i++) {
@@ -82,6 +80,16 @@ public class TrainConsistApp {
                 }
             }
         }
+    }
+
+    // ✅ UC18 Linear Search
+    public static int linearSearch(String[] arr, String key) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].equalsIgnoreCase(key)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public static void main(String[] args) {
@@ -104,8 +112,9 @@ public class TrainConsistApp {
             System.out.println("17. Exit");
             System.out.println("18. Add Validated Bogie (UC14)");
             System.out.println("19. Assign Cargo (UC15)");
-            System.out.println("20. Bubble Sort by Capacity (UC16)");
-            System.out.println("21. Sort Bogie Names (Arrays.sort - UC17)");
+            System.out.println("20. Bubble Sort (UC16)");
+            System.out.println("21. Arrays.sort (UC17)");
+            System.out.println("22. Search Bogie ID (Linear Search - UC18)");
 
             int ch = sc.nextInt();
             sc.nextLine();
@@ -140,7 +149,7 @@ public class TrainConsistApp {
                     System.out.println(bogieIds);
                     break;
 
-                // ✅ UC14
+                // UC14
                 case 18:
                     try {
                         System.out.print("Enter Bogie Name: ");
@@ -151,14 +160,14 @@ public class TrainConsistApp {
                         sc.nextLine();
 
                         Bogie b = new Bogie(name, cap);
-                        System.out.println("Bogie Created: " + b);
+                        System.out.println("Created: " + b);
 
                     } catch (InvalidCapacityException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
 
-                // ✅ UC15
+                // UC15
                 case 19:
                     System.out.print("Enter Bogie Type: ");
                     String type = sc.nextLine();
@@ -172,7 +181,7 @@ public class TrainConsistApp {
                     System.out.println(gb);
                     break;
 
-                // ✅ UC16
+                // UC16
                 case 20:
                     try {
                         List<Bogie> list = new ArrayList<>();
@@ -180,12 +189,8 @@ public class TrainConsistApp {
                         list.add(new Bogie("AC Chair", 60));
                         list.add(new Bogie("First Class", 40));
 
-                        System.out.println("Before Sorting:");
-                        list.forEach(System.out::println);
-
                         bubbleSortBogies(list);
 
-                        System.out.println("\nAfter Bubble Sort:");
                         list.forEach(System.out::println);
 
                     } catch (InvalidCapacityException e) {
@@ -193,17 +198,32 @@ public class TrainConsistApp {
                     }
                     break;
 
-                // ✅ UC17 IMPLEMENTATION
+                // UC17
                 case 21:
                     String[] bogieNames = {"Sleeper", "AC Chair", "First Class"};
-
-                    System.out.println("Before Sorting:");
-                    System.out.println(Arrays.toString(bogieNames));
-
                     Arrays.sort(bogieNames);
-
-                    System.out.println("After Sorting (Alphabetical):");
                     System.out.println(Arrays.toString(bogieNames));
+                    break;
+
+                // ✅ UC18
+                case 22:
+                    if (bogieIds.isEmpty()) {
+                        System.out.println("No bogie IDs available!");
+                        break;
+                    }
+
+                    String[] idArray = bogieIds.toArray(new String[0]);
+
+                    System.out.print("Enter Bogie ID to search: ");
+                    String key = sc.nextLine();
+
+                    int index = linearSearch(idArray, key);
+
+                    if (index != -1) {
+                        System.out.println("✅ Bogie ID FOUND at position: " + index);
+                    } else {
+                        System.out.println("❌ Bogie ID NOT FOUND");
+                    }
                     break;
 
                 case 17:
